@@ -1,3 +1,6 @@
+const {ObjectID} = require('mongodb');    //temp here for exercise
+
+
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -28,6 +31,27 @@ app.get('/todo', (req, res) => {
   }, (e) => {
     res.status(400).send(e);
 });
+});
+
+//Get params
+app.get('/todo/:id', (req, res) => {      //:id is the name i have given this param but could be anything
+
+  var id = req.params.id;
+  console.log(id);
+
+
+  if (!ObjectID.isValid(id)) {                  //temp here for the exercise
+    return res.status(404).send();
+  }
+
+  Todo.findById(id).then ((todo) => {           //temp here for the exercise
+    if (!todo) {
+        res.status(404).send()
+        }
+      res.send({todo});
+  }).catch((e) => {
+    res.status(400).send();
+  });
 });
 
 app.listen(3000, () =>{
