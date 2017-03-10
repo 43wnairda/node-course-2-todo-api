@@ -10,6 +10,7 @@ var {Todo} = require('./models/todos');
 var {User} = require('./models/users');
 
 var app = express();
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -54,8 +55,8 @@ app.get('/todo/:id', (req, res) => {      //:id is the name i have given this pa
   });
 });
 
-app.listen(3000, () =>{
-  console.log('Listening on port 3000');
+app.listen(port, () =>{
+  console.log(`Listening on port: ${port}`);
 });
 
 module.exports = {app};   //ES6 syntax for app = app
