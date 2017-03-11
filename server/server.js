@@ -55,6 +55,26 @@ app.get('/todo/:id', (req, res) => {      //:id is the name i have given this pa
   });
 });
 
+///////////////////////////////
+app.delete('/todo/:id', (req, res) => {
+
+var id = req.params.id;
+if (!ObjectID.isValid(id)) {                  //temp here for the exercise
+  return res.status(404).send();
+}
+
+Todo.findByIdAndRemove(id).then ((todo) => {
+  if (!todo) {
+      res.status(404).send()
+      }
+    res.send({todo});
+  }).catch((e) => {
+  res.status(400).send();
+});  
+});
+////////////////////////////////
+
+
 app.listen(port, () =>{
   console.log(`Listening on port: ${port}`);
 });
