@@ -1,13 +1,13 @@
 const {ObjectID} = require('mongodb');    //temp here for exercise
+const _ = require('lodash');
+
+const express = require('express');
+const bodyParser = require('body-parser');
 
 
-var express = require('express');
-var bodyParser = require('body-parser');
-
-
-var {mongoose} = require('./db/mongoose');
-var {Todo} = require('./models/todos');
-var {User} = require('./models/users');
+const {mongoose} = require('./db/mongoose');
+const {Todo} = require('./models/todos');
+const {User} = require('./models/users');
 
 var app = express();
 const port = process.env.PORT || 3000;
@@ -70,11 +70,39 @@ Todo.findByIdAndRemove(id).then ((todo) => {
     res.send({todo});
   }).catch((e) => {
   res.status(400).send();
-});  
+});
 });
 ////////////////////////////////
 
+app.patch('/todo/:id', (req, res) => {
+  var id = req.params.id;
+  var body = _.pick(req.body, ['text', 'completed'])    //text and completed are the only properties ther usewr can update, if they exist
 
+  if (!ObjectID.isValid(id)) {                  //temp here for the exercise
+    return res.status(404).send();
+  }
+
+  if (_.isBoolean(body.completed)  && body.completed) {   //if completed is a booleam & is = 'true'
+    body.completedAt = new Date().getTime();
+  } else {
+    body.completed = false;
+    body.completedAt = null;
+  }
+
+  Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
+
+    if (!todo) {
+      return res.status(404).send();
+    }
+    res.send({todo});
+  }).catch((e) => {
+    res.status(400).send();
+  })
+
+
+
+});
+///////////////////////////////
 app.listen(port, () =>{
   console.log(`Listening on port: ${port}`);
 });
