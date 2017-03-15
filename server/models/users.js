@@ -53,6 +53,30 @@ UserSchema.methods.generateAuthToken = function () {    //arrow functions do not
   })
 };
 
+UserSchema.statics.findByToken = function (token) {       //statics is similar to .methods but returns model methods instead of incidents methods.
+  var User = this;                              //model methods get called with the Model User.  Incidents get called with the doc user
+  var decoded;
+
+  try {
+    decoded = jwt.verify(token, 'abc123');
+  } catch (e) {
+    // return new  ((resolve, reject) => {
+    //   reject();
+    // });
+
+    //can achieve the same as above with
+    return Promise.reject();
+    ///////////
+    
+  }
+
+  return User.findOne({
+    '_id': decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
+  });
+};
+
 var User = mongoose.model('User', UserSchema);
 
 module.exports = {User};

@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const {mongoose} = require('./db/mongoose');
 const {Todo} = require('./models/todos');
 const {User} = require('./models/users');
+var {authenticate} = require('./middleware/authenticate');
 
 var app = express();
 const port = process.env.PORT;
@@ -122,9 +123,13 @@ app.post('/user', (req, res) =>{
 });
 
 
+//get user by token
 
-
-////////////////////////////////////////////////
+app.get('/user/me', authenticate, (req, res) => {
+  
+    res.send(req.user);
+});
+///////////////////////////////////////////////
 app.listen(port, () =>{
   console.log(`Listening on port: ${port}`);
 });
