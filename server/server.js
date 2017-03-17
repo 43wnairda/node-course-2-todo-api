@@ -10,6 +10,8 @@ const bodyParser = require('body-parser');
 const {mongoose} = require('./db/mongoose');
 const {Todo} = require('./models/todos');
 const {User} = require('./models/users');
+const bcrypt = require('bcryptjs');
+
 var {authenticate} = require('./middleware/authenticate');
 
 var app = express();
@@ -130,6 +132,36 @@ app.get('/user/me', authenticate, (req, res) => {
     res.send(req.user);
 });
 ///////////////////////////////////////////////
+
+////POST /user/login {email, password}     for logins from additional devices or where token lost.
+//use res.send(res,body) and also test in postman
+
+ app.post('/user/login', (req, res) =>{
+  var body = _.pick(req.body, ['email', 'password'])
+
+User.findByCredentials(body.email, body.password).then((user) => {
+    return user.generateAuthToken().then((token) => {
+    res.header('x-auth', token).send(user);
+  })
+
+}).catch((e) => {
+  res.status(400).send();
+});
+
+// User.findOne({          //this is a better method than .find above as it doesn't rely on an array
+//    email: req.body.email
+//
+//  }).then ((user) => {
+//       //console.log('res', res.body.password);
+//
+//   });
+
+
+});
+
+
+
+
 app.listen(port, () =>{
   console.log(`Listening on port: ${port}`);
 });
