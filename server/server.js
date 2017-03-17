@@ -115,8 +115,8 @@ app.post('/user', (req, res) =>{
     return user.generateAuthToken();
 
       }).then ((token) => {
-    res.header('x-auth', token).send({user});
-
+    //res.header('x-auth', token).send({user});...this is a user collection
+    res.header('x-auth', token).send(user); //this is a single user
   }).catch ((e) => {
     res.status(400).send(e);
   })
@@ -126,7 +126,7 @@ app.post('/user', (req, res) =>{
 //get user by token
 
 app.get('/user/me', authenticate, (req, res) => {
-  
+
     res.send(req.user);
 });
 ///////////////////////////////////////////////

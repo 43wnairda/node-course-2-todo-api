@@ -90,13 +90,6 @@ UserSchema.pre('save', function (next) {
         next();
       });
     });
-///hasshing password
-
-    // bcrypt.compare(password, hash, (err, res) => {
-    //   console.log(res);
-    //
-    // });
-
   } else {
     next();
   }

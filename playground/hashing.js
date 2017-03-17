@@ -13,10 +13,10 @@ const bcrypt = require('bcryptjs');
 // });
 // ///////
 //comparing hashing value with value user entered to allow access to app or not.
-// var hashedPassword = '$2a$10$DxEAl5Xf7Fi/dWnMZQ62Ru1/DBGuCcIjw1ZrGsEaJt2tRTYU.qC.6';
-// bcrypt.compare(password, hashedPassword, (err, res) => {
-//   console.log(res);
-// });
+var hashedPassword = '$2a$10$DxEAl5Xf7Fi/dWnMZQ62Ru1/DBGuCcIjw1ZrGsEaJt2tRTYU.qC.6';
+bcrypt.compare(password, hashedPassword, (err, res) => {
+  console.log(res);
+});
 /////////
 
 
