@@ -148,18 +148,16 @@ User.findByCredentials(body.email, body.password).then((user) => {
   res.status(400).send();
 });
 
-// User.findOne({          //this is a better method than .find above as it doesn't rely on an array
-//    email: req.body.email
-//
-//  }).then ((user) => {
-//       //console.log('res', res.body.password);
-//
-//   });
-
-
 });
 
-
+////logging someone out/deleting their token
+app.delete('/user/me/token', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send();
+  }, () => {
+    res.status(400).send();
+  });
+});
 
 
 app.listen(port, () =>{

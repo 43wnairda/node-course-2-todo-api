@@ -54,6 +54,19 @@ UserSchema.methods.generateAuthToken = function () {    //arrow functions do not
   })
 };
 
+
+UserSchema.methods.removeToken = function (token) {
+    var user = this;
+
+    return user.update ({
+      $pull: {
+          tokens:{token}
+      }
+    });
+};
+
+
+
 UserSchema.statics.findByToken = function (token) {       //statics is similar to .methods but returns model methods instead of incidents methods.
   var User = this;                              //model methods get called with the Model User.  Incidents get called with the doc user
   var decoded;
