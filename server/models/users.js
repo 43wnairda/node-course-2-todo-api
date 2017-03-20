@@ -45,7 +45,7 @@ return _.pick(userObject, ['_id', 'email']);
 UserSchema.methods.generateAuthToken = function () {    //arrow functions do not bind a this keyword, need a good old fashioned function for that
   var user = this;          //need a this keyword for the methods, as it stores the individual document.
   var access = 'auth';
-  var token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();  //note access is ES6 for access: access
+  var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();  //note access is ES6 for access: access
 
   user.tokens.push({access, token});
 
@@ -72,7 +72,7 @@ UserSchema.statics.findByToken = function (token) {       //statics is similar t
   var decoded;
 
   try {
-    decoded = jwt.verify(token, 'abc123');
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (e) {
     // return new  ((resolve, reject) => {
     //   reject();
