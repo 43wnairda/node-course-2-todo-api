@@ -1,4 +1,4 @@
-const mongoose = require ('mongoose');
+const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
@@ -8,8 +8,8 @@ var UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    maxlength: 26,
     trim: true,
+    minlength: 1,
     unique: true,
     validate: {
       validator: validator.isEmail,
@@ -60,7 +60,7 @@ UserSchema.methods.removeToken = function (token) {
 
     return user.update ({
       $pull: {
-          tokens:{token}
+          tokens: {token}
       }
     });
 };
@@ -117,20 +117,13 @@ UserSchema.statics.findByCredentials = function (email, password) {
 
 };
 
-
-
-
-
-
-
 ///////////////////hashing passwords before saving the user to the database///
 UserSchema.pre('save', function (next) {
   var user = this;
-  var password = user.password;
 
   if (user.isModified('password')) {
     bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(password, salt, (err, hash) => {
+      bcrypt.hash(user.password, salt, (err, hash) => {
         user.password = hash;
         next();
       });
@@ -138,8 +131,6 @@ UserSchema.pre('save', function (next) {
   } else {
     next();
   }
-
-
 });
 ////////////////////////////////
 
